@@ -65,7 +65,11 @@ class Manifest:
         return self._content
 
     def get_list_of_blobs(self) -> list[Blob]:
-        manifest_dict = json.loads(self.content)
+        if "linux/amd64" in self.content:
+            # DXF returns a map for the manifest with multiple entries
+            manifest_dict = json.loads(self.content["linux/amd64"])
+        else:
+            manifest_dict = json.loads(self.content)
         result: list[Blob] = [
             Blob(self.dxf_base, manifest_dict["config"]["digest"], self.repository)
         ]
