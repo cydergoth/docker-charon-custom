@@ -142,7 +142,11 @@ def create_zip_from_docker_images(
     )
     for manifest in manifests:
         dest = payload_descriptor.manifests_paths[manifest.docker_image_name]
-        zip_file.writestr(dest, manifest.content)
+        if "linux/amd64" in manifest.content:
+            single_manifest = manifest.content["linux/amd64"]
+        else:
+            single_manifest = manifest.content
+        zip_file.writestr(dest, single_manifest)
     if PYDANTIC_V2:
         payload_descriptor_json = payload_descriptor.model_dump_json(indent=4)
     else:
